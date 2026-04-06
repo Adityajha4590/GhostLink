@@ -4,7 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -23,7 +23,7 @@ fun SettingsScreen(navController: NavController) {
                 title = { Text("Settings") },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back")
+                        Icon(Icons.Filled.ArrowBack, "Back")
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -61,17 +61,15 @@ fun SettingsScreen(navController: NavController) {
                     SettingsButton("Export encrypted backup", MaterialTheme.colorScheme.primary) { }
                 }
                 
-                item {
-                    Spacer(modifier = Modifier.height(32.dp))
-                    Text(
-                        "GhostLink v1.0\nFully Offline. Decentralized.",
-                        modifier = Modifier.fillMaxWidth(),
-                        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
-                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
-                        style = MaterialTheme.typography.labelMedium
-                    )
-                    Spacer(modifier = Modifier.height(32.dp))
-                }
+                Spacer(modifier = Modifier.height(32.dp))
+                Text(
+                    "GhostLink v1.0\nFully Offline. Decentralized.",
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
+                    style = MaterialTheme.typography.labelMedium
+                )
+                Spacer(modifier = Modifier.height(32.dp))
             }
         }
     }

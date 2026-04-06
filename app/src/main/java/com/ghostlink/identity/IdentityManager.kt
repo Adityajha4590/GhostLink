@@ -57,7 +57,7 @@ class IdentityManager(private val context: Context) {
     fun signMessage(message: ByteArray): ByteArray? {
         val secretKey = getSecretKey() ?: return null
         val signature = ByteArray(Sign.BYTES)
-        return if (lazySodium.cryptoSignDetached(signature, message, message.size.toLong(), Key.fromBytes(secretKey))) {
+        return if (lazySodium.cryptoSignDetached(signature, message, message.size.toLong(), secretKey)) {
             signature
         } else null
     }
