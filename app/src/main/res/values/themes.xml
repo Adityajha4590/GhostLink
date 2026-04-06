@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.GhostLink" parent="android:Theme.Material.Light.NoActionBar">
+        <!-- We use Compose so this is just a placeholder to avoid manifest errors -->
+    </style>
+</resources>
