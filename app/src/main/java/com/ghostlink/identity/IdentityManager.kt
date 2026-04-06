@@ -7,8 +7,6 @@ import com.ghostlink.crypto.KeystoreManager
 import com.goterl.lazysodium.LazySodiumAndroid
 import com.goterl.lazysodium.SodiumAndroid
 import com.goterl.lazysodium.interfaces.Sign
-import com.goterl.lazysodium.utils.Key
-import com.goterl.lazysodium.utils.KeyPair
 import java.security.MessageDigest
 
 class IdentityManager(private val context: Context) {
@@ -18,14 +16,14 @@ class IdentityManager(private val context: Context) {
 
     fun initializeIdentity() {
         if (!prefs.contains("public_key")) {
-            val keyPair: KeyPair = lazySodium.cryptoSignKeypair()
+            val keyPair = lazySodium.cryptoSignKeypair()
             val publicKey = keyPair.publicKey.asBytes
             val secretKey = keyPair.secretKey.asBytes
 
-            // Secure private key via Keystore AES
+            // Secure private key via Keystore AES wrapper
             val encryptedSecret = keystoreManager.encryptKey(secretKey)
-            
-            // Generate User ID (SHA-256 of Public Key)
+
+            // UserID = SHA-256(PublicKey)
             val digest = MessageDigest.getInstance("SHA-256")
             val userIdHash = digest.digest(publicKey)
 
@@ -47,19 +45,22 @@ class IdentityManager(private val context: Context) {
         val enc = prefs.getString("secret_key_enc", null)
         val iv = prefs.getString("secret_key_iv", null)
         if (enc != null && iv != null) {
-            val encBytes = Base64.decode(enc, Base64.NO_WRAP)
-            val ivBytes = Base64.decode(iv, Base64.NO_WRAP)
-            return keystoreManager.decryptKey(encBytes, ivBytes)
+            return try {
+                val encBytes = Base64.decode(enc, Base64.NO_WRAP)
+                val ivBytes = Base64.decode(iv, Base64.NO_WRAP)
+                keystoreManager.decryptKey(encBytes, ivBytes)
+            } catch (e: Exception) { null }
         }
         return null
     }
 
+    fun getUserId(): String? = prefs.getString("user_id", null)
+
     fun signMessage(message: ByteArray): ByteArray? {
         val secretKey = getSecretKey() ?: return null
         val signature = ByteArray(Sign.BYTES)
-        return if (lazySodium.cryptoSignDetached(signature, message, message.size.toLong(), secretKey)) {
-            signature
-        } else null
+        val success = lazySodium.cryptoSignDetached(signature, message, message.size.toLong(), secretKey)
+        return if (success) signature else null
     }
 
     fun resetIdentity() {

@@ -6,19 +6,29 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.ghostlink.identity.IdentityManager
 import com.ghostlink.ui.theme.ElectricGreen
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 
 @Composable
 fun SplashScreen(navController: NavController) {
+    val context = LocalContext.current
+    val identityManager = remember { IdentityManager(context) }
+
     LaunchedEffect(key1 = true) {
-        // Behind the scenes: generate identity if not exists
-        // ...
-        delay(2000)
+        withContext(Dispatchers.IO) {
+            identityManager.initializeIdentity() // Generate keys if not yet done
+        }
+        delay(1800)
         navController.navigate("home") {
             popUpTo("splash") { inclusive = true }
         }
