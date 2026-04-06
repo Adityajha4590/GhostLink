@@ -1,11 +1,4 @@
-buildscript {
-    extra.apply {
-        set("compose_version", "1.5.4")
-        set("kotlin_version", "1.9.20")
-        set("nav_version", "2.7.5")
-    }
-}
-
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
     id("com.android.application") version "8.1.4" apply false
     id("org.jetbrains.kotlin.android") version "1.9.20" apply false
